@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# -*- coding: utf-8 -*-
+
+docker build --rm -t rero/rero-mef-nginx:latest docker/nginx/
+docker push rero/rero-mef-nginx:latest
+docker build --rm -t rero/rero-mef.base:latest -f Dockerfile.base .
+docker build --rm -t rero/rero-mef:latest -f Dockerfile .
+docker push rero/rero-mef:latest
+# kubectl create secret generic mef  \
+#    --from-literal=RABBITMQ_DEFAULT_USER='mef' \
+#    --from-literal=RABBITMQ_DEFAULT_PASS='changeit' \
+#    --from-literal=POSTGRES_USER='mef' \
+#    --from-literal=POSTGRES_DB='mef' \
+#    --from-literal=POSTGRES_PASSWORD='changeit' \
+#    --from-literal=INVENIO_SECRET_KEY='changeit' \
+#    --from-literal=INVENIO_MAIL_SERVER='smtp.vsnet.ch' \
+#    --from-literal=INVENIO_SECURITY_EMAIL_SENDER='noreply@rero.ch'
+
+kubectl apply -f kubernetes

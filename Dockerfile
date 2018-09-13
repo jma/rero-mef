@@ -22,12 +22,11 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
+FROM rero-mef-base:latest
 
 LABEL maintainer="software@rero.ch"
 
 LABEL description="MEF (Multilingual Entity File) server with records for persons, works, etc. for reuse in integrated library systems (ILS)."
-
-FROM rero-mef-base:latest
 
 USER 0
 

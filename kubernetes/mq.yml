@@ -1,0 +1,56 @@
+# -*- coding: utf-8 -*-
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mef-mq
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mef
+        tier: mq
+    spec:
+      containers:
+      - name: mef-mq
+        image: rabbitmq:3-management
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          valueFrom:
+            secretKeyRef:
+              name: mef
+              key: RABBITMQ_DEFAULT_USER
+        - name: RABBITMQ_DEFAULT_PASS
+          valueFrom:
+            secretKeyRef:
+              name: mef
+              key: RABBITMQ_DEFAULT_PASS
+        - name: GET_HOSTS_FROM
+          value: dns
+        ports:
+        - containerPort: 5672
+          name: worker
+        - containerPort: 15672
+          name: ui
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mef-mq
+  labels:
+    app: mef
+    tier: mq
+spec:
+  type: NodePort
+  ports:
+    - port: 5672
+      nodePort: 30067
+      name: worker
+    - port: 15672
+      nodePort: 30066
+      name: ui
+  selector:
+    app: mef
+    tier: mq
+
